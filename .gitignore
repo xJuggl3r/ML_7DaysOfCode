@@ -1,0 +1,43 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Dependencies
+lib/
+libs/
+Library/
+bin/
+include/
+share/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Pytest
+pytest_cache/
+
+# Logs
+*.log
+
+# Data files
+data/
+
+# IDE
+.idea/
+
+# Compiled Python modules
+*.pyc
+
+# Mac OS
+.DS_Store
+
+# Editors
+.vscode/
+*.sublime-project
+*.sublime-workspace
