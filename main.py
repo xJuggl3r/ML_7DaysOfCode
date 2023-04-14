@@ -1,5 +1,9 @@
 import pandas as pd
+from pandas_profiling import ProfileReport
+import matplotlib.pyplot as plt
+import seaborn as sns
 
+## LOADING
 # Path: dataset.csv
 df = pd.read_csv('dataset.csv')
 
@@ -13,8 +17,31 @@ df.isna().sum()
 # Drop NaN values
 df.dropna(inplace=True)
 
+# Check types
+df.dtypes
+
+## FEATURE ENGINEERING for future analysis
+# Create a function that returns a dataframe with all the songs of a given artist and the genre of the song
+def get_artist_genre(artist):
+    artist_df = df[df['artists'] == artist]
+    artist_df['track_genre'] = artist_df['track_genre'].apply(lambda x: x.split(',')[0])
+    return artist_df
+
+# Create a function that returns a dataframe with all the songs of a given genre
+def get_genre_songs(genre):
+    genre_df = df[df['track_genre'] == genre]
+    return genre_df
+
 
 ## EXPLORATORY DATA ANALYSIS
+
+# Getting a report with pandas_profiling
+profile = ProfileReport(df, title='Spotify Dataset', explorative=True)
+profile.to_file('spotify_dataset.html')
+
+# Basic descriptive statistics
+df.describe()
+
 # Songs with popularity = 100
 df[df['popularity'] == 100]
 
@@ -57,5 +84,45 @@ df.groupby('track_genre')['track_name'].count().sort_values(ascending=False).hea
 # Genres with more popularity
 df.groupby('track_genre')['popularity'].mean().sort_values(ascending=False).head(10)
 
+
+# Nome das variáveis
+# df.columns
+
+
+# Graph 2: Top 10 Artists by Number of Songs
+plt.figure(figsize=(10, 6))
+sns.countplot(y=df['artists'], order=df['artists'].value_counts().head(10).index)
+plt.title('Top 10 Artists by Number of Songs')
+plt.xlabel('Number of Songs')
+plt.ylabel('Artist')
+plt.show()
+plt.clf()
+
+# Graph 3: Top 10 Songs with Highest Popularity
+#  y is composed of song and the artist
+y = df.sort_values(by='popularity', ascending=False).head(10)['track_name'] + ' - ' + df.sort_values(by='popularity', ascending=False).head(10)['artists']
+x = df.sort_values(by='popularity', ascending=False).head(10)['popularity']
+plt.figure(figsize=(10, 6))
+sns.barplot(x=x, y=y)
+plt.title('Top 10 Songs with Highest Popularity')
+plt.xlabel('Popularity')
+plt.ylabel('Song')
+plt.show()
+plt.clf()
+
+
+# Line Graph: Top 10 Longest Songs and their artists
+# y is composed of song and the artist
+# the chart has a grid
+y = longest_songs['track_name'] + ' - ' + longest_songs['artists']
+x = longest_songs['duration_ms']
+plt.figure(figsize=(10, 6))
+sns.lineplot(x=x, y=y, marker='o')
+plt.title('Top 10 Longest Songs and their artists')
+plt.xlabel('Duration (ms)')
+plt.ylabel('Song')
+plt.grid()
+plt.show()
+plt.clf()
 
 
